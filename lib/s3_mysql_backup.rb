@@ -100,9 +100,9 @@ class S3MysqlBackup
     end
     else
       smtp = Net::SMTP.start(config["mail_domain"], config["mail_port"])
-      config['mail_to'].each do |s|
-        smtp.send_message(content, mail_from, s)
-      end
+      #config['mail_to'].each do |s|
+        smtp.send_message(content, mail_from, config['mail_to'])
+      #end
     end
   
   end

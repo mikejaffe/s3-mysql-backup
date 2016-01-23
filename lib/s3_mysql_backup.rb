@@ -100,7 +100,7 @@ class S3MysqlBackup
     end
     else
       smtp = Net::SMTP.start(config["mail_domain"], config["mail_port"])
-      smtp.send_message(content, mail_from, config['mail_to'])
+      smtp.send_message(content, mail_from, config['mail_to'].split(","))
     end
   
   end

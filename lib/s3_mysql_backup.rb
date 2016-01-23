@@ -76,7 +76,7 @@ class S3MysqlBackup
   def mail_notification(filename)
     return unless config['mail_to']
     stats = File.stat(filename)
-    subject = "sql backup: #{@db_name}: #{human_size(stats.size)}"
+    subject = "MySql Backup Notification: #{@db_name}: #{human_size(stats.size)}"
     mail_from = config['mail_from'] ? config['mail_from'] : config['mail_user']
 
     content = []
@@ -84,7 +84,7 @@ class S3MysqlBackup
     content << "To: #{config['mail_to']}"
     content << "Subject: #{subject}"
     content << "Date: #{Time.now.rfc2822}"
-    content << "\n#{File.basename(filename)}\n" # body
+    content << "\nMySql backup uploaded to S3 bucket '#{config['s3_bucket']}' successfully. \n\n #{File.basename(filename)}\n" # body
     content = content.join("\n")
 
     if config['mail_authentication'] != "None"

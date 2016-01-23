@@ -81,7 +81,7 @@ class S3MysqlBackup
 
     content = []
     content << "From: #{mail_from}"
-    content << "To: #{config['mail_to']}"
+    content << "To: #{config['mail_to'].join(",")}"
     content << "Subject: #{subject}"
     content << "Date: #{Time.now.rfc2822}"
     content << "\nMySql backup uploaded to S3.\n\nDownload link (Public url expires in 24 hours, but file will remain for 30 days):\n#{@obj.url_for(:read, :expires => 1440*60)}\n" # body

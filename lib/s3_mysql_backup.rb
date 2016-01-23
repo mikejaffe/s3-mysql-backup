@@ -87,8 +87,8 @@ class S3MysqlBackup
     content << "\n#{File.basename(filename)}\n" # body
     content = content.join("\n")
 
-    smtp = Net::SMTP.new(config["mail_domain"], config["mail_port"])
     if config['mail_authentication'] != "None"
+    smtp = Net::SMTP.new(config["mail_domain"], config["mail_port"])
     smtp.enable_starttls unless config["mail_start_tls"] == false
     smtp.start(
       config["mail_domain"].to_s, 
@@ -99,8 +99,10 @@ class S3MysqlBackup
       smtp.send_message(content, mail_from, config['mail_to'])
     end
     else
+      smtp = Net::SMTP.start(config["mail_domain"], config["mail_port"])
       smtp.send_message(content, mail_from, config['mail_to'])
     end
+  
   end
 
   # remove old backups

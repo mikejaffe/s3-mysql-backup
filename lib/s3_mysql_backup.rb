@@ -55,7 +55,7 @@ class S3MysqlBackup
     filename  = Time.now.strftime("#{@backup_dir}/#{@db_name}.%Y%m%d.%H%M%S.sql.gz")
     mysqldump = `which mysqldump`.to_s.strip
     `#{mysqldump} --host='#{config['dump_host']}' --user='#{config['dump_user']}' --password='#{config['dump_pass']}' '#{@db_name}' | gzip > #{filename}`
-    @s3utils.store(filename, config['remote_dir'])
+    @obj = @s3utils.store(filename, config['remote_dir'])
     filename
   end
 
@@ -84,7 +84,7 @@ class S3MysqlBackup
     content << "To: #{config['mail_to']}"
     content << "Subject: #{subject}"
     content << "Date: #{Time.now.rfc2822}"
-    content << "\nMySql backup uploaded to S3 bucket '#{config['s3_bucket']}' successfully. \n\n #{File.basename(filename)}\n" # body
+    content << "\nMySql backup uploaded to S3.\n\nDownload link (Public url expires in 24 hours, but file will remain for 30 days):\n#{@obj.url_for(:read, :expires => 1440*60)}\n" # body
     content = content.join("\n")
 
     if config['mail_authentication'] != "None"
